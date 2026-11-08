@@ -8,4 +8,9 @@
  *
  * 🟢 You can import this file directly.
  */
+export type * from './models/Customer.js'
+export type * from './models/Reservation.js'
+export type * from './models/Cafe.js'
+export type * from './models/Visit.js'
+export type * from './models/ReservationHistory.js'
 export type * from './commonInputTypes.js'
