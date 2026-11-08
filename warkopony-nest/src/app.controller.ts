@@ -11,6 +11,6 @@ export class AppController {
   }
   @Get('sigma')
   data(){
-    return { status: 'success', pesan: 'haloooo'};
+    return { status: 'success', pesan: 'haloooo, ini dari backend mwahhahahh'};
   }
 }
