@@ -22,3 +22,85 @@ datasource db {
 //   createdAt DateTime @default(now())
 //   updatedAt DateTime @updatedAt
 // }
+
+enum ReservationStatus {
+  PENDING_CONFIRMATION
+  CONFIRMED
+  CANCELLED
+  EXPIRED
+  CHECKED_IN
+  COMPLETED
+  NO_SHOW
+}
+
+model Customer {
+  id        String        @id @default(uuid()) @db.Uuid
+  name      String        @db.VarChar(150)
+  phone     String        @db.VarChar(30)
+  createdAt DateTime      @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime      @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  reservations Reservation[]
+
+  @@index([phone])
+  @@map("customers")
+}
+
+model Reservation {
+  id          String            @id @default(uuid()) @db.Uuid
+  customerId  String            @map("customer_id") @db.Uuid
+  bookingCode String            @unique @map("booking_code") @db.VarChar(32)
+  startTime   DateTime          @map("start_time") @db.Timestamptz(3)
+  endTime     DateTime          @map("end_time") @db.Timestamptz(3)
+  guestCount  Int               @map("guest_count")
+  status      ReservationStatus @default(PENDING_CONFIRMATION)
+  createdAt   DateTime          @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt   DateTime          @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  customer Customer             @relation(fields: [customerId], references: [id], onDelete: Restrict)
+  visit    Visit?
+  history  ReservationHistory[]
+
+  @@index([customerId])
+  @@index([status, startTime, endTime])
+  @@map("reservations")
+}
+
+model Cafe {
+  id          String   @id @default(uuid()) @db.Uuid
+  name        String   @db.VarChar(150)
+  capacity    Int
+  openingTime DateTime @map("opening_time") @db.Time(0)
+  closingTime DateTime @map("closing_time") @db.Time(0)
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@map("cafes")
+}
+
+model Visit {
+  id               String    @id @default(uuid()) @db.Uuid
+  reservationId    String?   @unique @map("reservation_id") @db.Uuid
+  actualGuestCount Int       @map("actual_guest_count")
+  checkInAt        DateTime  @map("check_in_at") @db.Timestamptz(3)
+  checkOutAt       DateTime? @map("check_out_at") @db.Timestamptz(3)
+
+  reservation Reservation? @relation(fields: [reservationId], references: [id], onDelete: Restrict)
+
+  @@index([checkInAt, checkOutAt])
+  @@map("visits")
+}
+
+model ReservationHistory {
+  id            String             @id @default(uuid()) @db.Uuid
+  reservationId String             @map("reservation_id") @db.Uuid
+  oldStatus     ReservationStatus? @map("old_status")
+  newStatus     ReservationStatus @map("new_status")
+  note          String?            @db.Text
+  createdAt     DateTime           @default(now()) @map("created_at") @db.Timestamptz(3)
+
+  reservation Reservation @relation(fields: [reservationId], references: [id], onDelete: Restrict)
+
+  @@index([reservationId, createdAt])
+  @@map("reservation_histories")
+}
