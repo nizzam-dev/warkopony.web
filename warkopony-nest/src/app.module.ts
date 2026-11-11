@@ -3,6 +3,9 @@ import { createObserveModule } from '@nestjs/observe';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PrismaModule } from './prisma/prisma.module';
+import { ReservationController } from './reservation/reservation.controller';
+import { ReservationService } from './reservation/reservation.service';
+import { ReservationModule } from './reservation/reservation.module';
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
@@ -17,8 +20,9 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
       serviceId: 'warkopony-nest',
     }),
     PrismaModule,
+    ReservationModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [AppController, ReservationController],
+  providers: [AppService, ReservationService],
 })
 export class AppModule {}
