@@ -37,15 +37,23 @@ model Reservation {
   @@map("reservations")
 }
 
-// model User {
-//   id        Int      @id @default(autoincrement())
-//   name      String
-//   email     String   @unique
-//   password  String
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-// }
+enum Role {
+  ADMIN
+  KASIR
+}
 
+model User {
+  id           Int      @id @default(autoincrement())
+  name         String   @db.VarChar(150)
+  email        String   @unique @db.VarChar(255)
+  passwordHash String   @map("password_hash") @db.VarChar(255)
+  role         Role     @default(KASIR)
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@map("users")
+}
 // enum ReservationStatus {
 //   PENDING_CONFIRMATION
 //   CONFIRMED

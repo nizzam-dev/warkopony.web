@@ -16,3 +16,11 @@ export const ReservationStatus = {
 } as const
 
 export type ReservationStatus = (typeof ReservationStatus)[keyof typeof ReservationStatus]
+
+
+export const Role = {
+  ADMIN: 'ADMIN',
+  KASIR: 'KASIR'
+} as const
+
+export type Role = (typeof Role)[keyof typeof Role]
