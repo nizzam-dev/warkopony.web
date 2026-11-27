@@ -33,15 +33,14 @@ enum ReservationStatus {
   NO_SHOW
 }
 
-
 model Customer {
-  id        String   @id @default(uuid()) @db.Uuid
-  name      String   @db.VarChar(150)
-  phone     String   @db.VarChar(30)
-  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+  id        String        @id @default(uuid()) @db.Uuid
+  name      String        @db.VarChar(150)
+  phone     String        @db.VarChar(30)
+  createdAt DateTime      @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime      @updatedAt @map("updated_at") @db.Timestamptz(3)
 
-  reservation Reservation?
+  reservations Reservation[]
 
   @@index([phone])
   @@map("customers")
@@ -49,7 +48,7 @@ model Customer {
 
 model Reservation {
   id          String            @id @default(uuid()) @db.Uuid
-  customerId  String            @unique @map("customer_id") @db.Uuid
+  customerId  String            @map("customer_id") @db.Uuid
   bookingCode String            @unique @map("booking_code") @db.VarChar(32)
   startTime   DateTime          @map("start_time") @db.Timestamptz(3)
   endTime     DateTime          @map("end_time") @db.Timestamptz(3)
@@ -62,10 +61,10 @@ model Reservation {
   visit    Visit?
   history  ReservationHistory[]
 
+  @@index([customerId])
   @@index([status, startTime, endTime])
   @@map("reservations")
 }
-
 
 model Cafe {
   id          String   @id @default(uuid()) @db.Uuid
