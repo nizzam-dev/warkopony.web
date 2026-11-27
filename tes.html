@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <p id="text"> sigma</p>
+    <script>
+        async function Data() {
+            try {
+                const respon = await fetch('http://localhost:3000/sigma');
+                const out = await respon.json();
+                let text = document.getElementById('text');
+
+                if(out.status == 'success'){
+                    text.value = out.pesan
+                    console.log('ey');
+                    console.log(out.pesan)
+                    console.log(out);
+                }
+                else{
+                    console.log(out)
+                    console.log('gagal')
+                }
+            }
+            catch (e) {
+                console.log(e);
+            }
+
+        }
+        Data()
+    </script>
+</body>
+
+</html>
