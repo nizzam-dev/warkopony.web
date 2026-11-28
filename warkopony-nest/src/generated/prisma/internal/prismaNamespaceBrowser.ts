@@ -51,11 +51,8 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
-  Customer: 'Customer',
   Reservation: 'Reservation',
-  Cafe: 'Cafe',
-  Visit: 'Visit',
-  ReservationHistory: 'ReservationHistory'
+  User: 'User'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -74,23 +71,12 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
-export const CustomerScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  phone: 'phone',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type CustomerScalarFieldEnum = (typeof CustomerScalarFieldEnum)[keyof typeof CustomerScalarFieldEnum]
-
-
 export const ReservationScalarFieldEnum = {
   id: 'id',
-  customerId: 'customerId',
   bookingCode: 'bookingCode',
-  startTime: 'startTime',
-  endTime: 'endTime',
+  name: 'name',
+  phone: 'phone',
+  reservationAt: 'reservationAt',
   guestCount: 'guestCount',
   status: 'status',
   createdAt: 'createdAt',
@@ -100,40 +86,17 @@ export const ReservationScalarFieldEnum = {
 export type ReservationScalarFieldEnum = (typeof ReservationScalarFieldEnum)[keyof typeof ReservationScalarFieldEnum]
 
 
-export const CafeScalarFieldEnum = {
+export const UserScalarFieldEnum = {
   id: 'id',
   name: 'name',
-  capacity: 'capacity',
-  openingTime: 'openingTime',
-  closingTime: 'closingTime',
+  email: 'email',
+  passwordHash: 'passwordHash',
+  role: 'role',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
-export type CafeScalarFieldEnum = (typeof CafeScalarFieldEnum)[keyof typeof CafeScalarFieldEnum]
-
-
-export const VisitScalarFieldEnum = {
-  id: 'id',
-  reservationId: 'reservationId',
-  actualGuestCount: 'actualGuestCount',
-  checkInAt: 'checkInAt',
-  checkOutAt: 'checkOutAt'
-} as const
-
-export type VisitScalarFieldEnum = (typeof VisitScalarFieldEnum)[keyof typeof VisitScalarFieldEnum]
-
-
-export const ReservationHistoryScalarFieldEnum = {
-  id: 'id',
-  reservationId: 'reservationId',
-  oldStatus: 'oldStatus',
-  newStatus: 'newStatus',
-  note: 'note',
-  createdAt: 'createdAt'
-} as const
-
-export type ReservationHistoryScalarFieldEnum = (typeof ReservationHistoryScalarFieldEnum)[keyof typeof ReservationHistoryScalarFieldEnum]
+export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -150,12 +113,4 @@ export const QueryMode = {
 } as const
 
 export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
-
-
-export const NullsOrder = {
-  first: 'first',
-  last: 'last'
-} as const
-
-export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 

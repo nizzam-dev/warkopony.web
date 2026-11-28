@@ -14,93 +14,134 @@ datasource db {
 
 // ini nanti untuk table ygy:>, iyh gt ajh, nanti jlnin "npx prisma validate" lalu "npx prisma migrate dev --name init"
 // npx prisma generate
-// model User {
-//   id        Int      @id @default(autoincrement())
-//   name      String
-//   email     String   @unique
-//   password  String
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-// }
 
 enum ReservationStatus {
-  PENDING_CONFIRMATION
+  PENDING
   CONFIRMED
   CANCELLED
-  EXPIRED
-  CHECKED_IN
-  COMPLETED
-  NO_SHOW
-}
-
-model Customer {
-  id        String        @id @default(uuid()) @db.Uuid
-  name      String        @db.VarChar(150)
-  phone     String        @db.VarChar(30)
-  createdAt DateTime      @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt DateTime      @updatedAt @map("updated_at") @db.Timestamptz(3)
-
-  reservations Reservation[]
-
-  @@index([phone])
-  @@map("customers")
 }
 
 model Reservation {
-  id          String            @id @default(uuid()) @db.Uuid
-  customerId  String            @map("customer_id") @db.Uuid
-  bookingCode String            @unique @map("booking_code") @db.VarChar(32)
-  startTime   DateTime          @map("start_time") @db.Timestamptz(3)
-  endTime     DateTime          @map("end_time") @db.Timestamptz(3)
-  guestCount  Int               @map("guest_count")
-  status      ReservationStatus @default(PENDING_CONFIRMATION)
-  createdAt   DateTime          @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt   DateTime          @updatedAt @map("updated_at") @db.Timestamptz(3)
+  id            String            @id @default(uuid()) @db.Uuid
+  bookingCode   String            @unique @map("booking_code") @db.VarChar(32)
+  name          String            @db.VarChar(150)
+  phone         String            @db.VarChar(30)
+  reservationAt DateTime          @map("reservation_at") @db.Timestamptz(3)
+  guestCount    Int               @map("guest_count")
+  status        ReservationStatus @default(PENDING)
 
-  customer Customer             @relation(fields: [customerId], references: [id], onDelete: Restrict)
-  visit    Visit?
-  history  ReservationHistory[]
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
 
-  @@index([customerId])
-  @@index([status, startTime, endTime])
+  @@index([status, reservationAt])
   @@map("reservations")
 }
 
-model Cafe {
-  id          String   @id @default(uuid()) @db.Uuid
-  name        String   @db.VarChar(150)
-  capacity    Int
-  openingTime DateTime @map("opening_time") @db.Time(0)
-  closingTime DateTime @map("closing_time") @db.Time(0)
-  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
-
-  @@map("cafes")
+enum Role {
+  ADMIN
+  KASIR
 }
 
-model Visit {
-  id               String    @id @default(uuid()) @db.Uuid
-  reservationId    String?   @unique @map("reservation_id") @db.Uuid
-  actualGuestCount Int       @map("actual_guest_count")
-  checkInAt        DateTime  @map("check_in_at") @db.Timestamptz(3)
-  checkOutAt       DateTime? @map("check_out_at") @db.Timestamptz(3)
+model User {
+  id           Int      @id @default(autoincrement())
+  name         String   @db.VarChar(150)
+  email        String   @unique @db.VarChar(255)
+  passwordHash String   @map("password_hash") @db.VarChar(255)
+  role         Role     @default(KASIR)
 
-  reservation Reservation? @relation(fields: [reservationId], references: [id], onDelete: Restrict)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
 
-  @@index([checkInAt, checkOutAt])
-  @@map("visits")
+  @@map("users")
 }
+// enum ReservationStatus {
+//   PENDING_CONFIRMATION
+//   CONFIRMED
+//   CANCELLED
+//   EXPIRED
+//   CHECKED_IN
+//   COMPLETED
+//   NO_SHOW
+// }
 
-model ReservationHistory {
-  id            String             @id @default(uuid()) @db.Uuid
-  reservationId String             @map("reservation_id") @db.Uuid
-  oldStatus     ReservationStatus? @map("old_status")
-  newStatus     ReservationStatus @map("new_status")
-  note          String?            @db.Text
-  createdAt     DateTime           @default(now()) @map("created_at") @db.Timestamptz(3)
+// model Customer {
+//   id        String   @id @default(uuid()) @db.Uuid
+//   name      String   @db.VarChar(150)
+//   phone     String   @db.VarChar(30)
+//   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+//   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
 
-  reservation Reservation @relation(fields: [reservationId], references: [id], onDelete: Restrict)
+//   reservation Reservation?
 
-  @@index([reservationId, createdAt])
-  @@map("reservation_histories")
-}
+//   @@index([phone])
+//   @@map("customers")
+// }
+
+// model Reservation {
+//   id          String             @id @default(uuid()) @db.Uuid
+//   cafeId      String             @map("cafe_id") @db.Uuid
+//   customerId  String             @unique @map("customer_id") @db.Uuid
+//   bookingCode String             @unique @map("booking_code") @db.VarChar(32)
+//   startTime   DateTime           @map("start_time") @db.Timestamptz(3)
+//   expiresAt   DateTime           @map("expires_at") @db.Timestamptz(3)
+//   guestCount  Int                @map("guest_count")
+//   status      ReservationStatus @default(PENDING_CONFIRMATION)
+//   createdAt   DateTime           @default(now()) @map("created_at") @db.Timestamptz(3)
+//   updatedAt   DateTime           @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+//   cafe     Cafe               @relation(fields: [cafeId], references: [id], onDelete: Restrict)
+//   customer Customer            @relation(fields: [customerId], references: [id], onDelete: Restrict)
+//   visit    Visit?
+//   history  ReservationHistory[]
+
+//   @@index([status, startTime, expiresAt])
+//   @@index([cafeId])
+//   @@unique([id, cafeId])
+//   @@map("reservations")
+// }
+
+// model Cafe {
+//   id          String   @id @default(uuid()) @db.Uuid
+//   name        String   @db.VarChar(150)
+//   capacity    Int
+//   openingTime DateTime @map("opening_time") @db.Time(0)
+//   closingTime DateTime @map("closing_time") @db.Time(0)
+//   createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+//   updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+//   reservations Reservation[]
+//   visits       Visit[]
+
+//   @@map("cafes")
+// }
+
+// model Visit {
+//   id               String    @id @default(uuid()) @db.Uuid
+//   cafeId           String    @map("cafe_id") @db.Uuid
+//   reservationId    String?   @unique @map("reservation_id") @db.Uuid
+//   actualGuestCount Int       @map("actual_guest_count")
+//   checkInAt        DateTime  @map("check_in_at") @db.Timestamptz(3)
+//   checkOutAt       DateTime? @map("check_out_at") @db.Timestamptz(3)
+
+//   cafe        Cafe         @relation(fields: [cafeId], references: [id], onDelete: Restrict)
+//   reservation Reservation? @relation(fields: [reservationId, cafeId], references: [id, cafeId], onDelete: Restrict, map: "visits_reservation_cafe_id_fkey")
+
+//   @@index([checkInAt, checkOutAt])
+//   @@index([cafeId])
+//   @@unique([reservationId, cafeId])
+//   @@map("visits")
+// }
+
+// model ReservationHistory {
+//   id            String             @id @default(uuid()) @db.Uuid
+//   reservationId String             @map("reservation_id") @db.Uuid
+//   oldStatus     ReservationStatus? @map("old_status")
+//   newStatus     ReservationStatus @map("new_status")
+//   note          String?            @db.Text
+//   createdAt     DateTime           @default(now()) @map("created_at") @db.Timestamptz(3)
+
+//   reservation Reservation @relation(fields: [reservationId], references: [id], onDelete: Restrict)
+
+//   @@index([reservationId, createdAt])
+//   @@map("reservation_histories")
+// }

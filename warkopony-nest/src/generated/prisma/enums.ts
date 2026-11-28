@@ -10,13 +10,17 @@
 */
 
 export const ReservationStatus = {
-  PENDING_CONFIRMATION: 'PENDING_CONFIRMATION',
+  PENDING: 'PENDING',
   CONFIRMED: 'CONFIRMED',
-  CANCELLED: 'CANCELLED',
-  EXPIRED: 'EXPIRED',
-  CHECKED_IN: 'CHECKED_IN',
-  COMPLETED: 'COMPLETED',
-  NO_SHOW: 'NO_SHOW'
+  CANCELLED: 'CANCELLED'
 } as const
 
 export type ReservationStatus = (typeof ReservationStatus)[keyof typeof ReservationStatus]
+
+
+export const Role = {
+  ADMIN: 'ADMIN',
+  KASIR: 'KASIR'
+} as const
+
+export type Role = (typeof Role)[keyof typeof Role]
