@@ -15,8 +15,6 @@ export class ReservationService {
         private readonly dbHelper: databaseHelper
     ) { }
 
-    // findReservation(){}
-
     async createReservation(dto: CreateReservationDto) {
         const reservationAt = new Date(dto.reservationAt);
 
@@ -68,9 +66,8 @@ Terima kasih!
         const url = `https://wa.me/${phoneLink}?text=${encMessage}`
 
         return {
-            code: bookingCode,
-            date: formatedDate,
-            uri: encMessage,
+            status: 'success',
+            // code: bookingCode,
             url: url,
         };
     }
@@ -89,7 +86,7 @@ Terima kasih!
         if (!reservation) {
             throw new NotFoundException('code tidak ditemukan');
         }
-3
+        
         const formatedDate = formatUtils.formatDate(reservation.reservationAt);
 
         return {
