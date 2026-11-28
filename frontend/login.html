@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f0e7">
+  <title>Masuk Admin · Warkopony</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <style>
+    :root {
+      --ivory: #f6f0e7;
+      --paper: #fffdfa;
+      --espresso: #2f211b;
+      --espresso-soft: #624e42;
+      --muted: #8d7e72;
+      --line: #e7ddd1;
+      --olive: #84945f;
+      --olive-dark: #5b6b3d;
+      --olive-soft: #edf1e4;
+      --danger: #a95243;
+      --danger-soft: #f9ece8;
+      --shadow: 0 24px 65px rgba(65, 42, 24, .12);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { min-height: 100%; }
+    body {
+      margin: 0;
+      color: var(--espresso);
+      background: var(--ivory);
+      font-family: "DM Sans", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+    .page-shell {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 28px 22px;
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+    }
+    .page-shell::before, .page-shell::after {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .page-shell::before {
+      width: 420px;
+      height: 420px;
+      left: -190px;
+      top: -170px;
+      background: rgba(132, 148, 95, .12);
+    }
+    .page-shell::after {
+      width: 560px;
+      height: 560px;
+      right: -310px;
+      bottom: -330px;
+      border: 1px solid rgba(132, 148, 95, .2);
+    }
+    .login-layout {
+      width: min(100%, 1030px);
+      display: grid;
+      grid-template-columns: minmax(300px, .88fr) minmax(360px, 1.12fr);
+      min-height: 620px;
+      background: var(--paper);
+      border: 1px solid rgba(76, 50, 31, .08);
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    .story-panel {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 42px;
+      color: #f7f2e9;
+      background: var(--espresso);
+      overflow: hidden;
+    }
+    .story-panel::before {
+      content: "";
+      width: 410px;
+      height: 410px;
+      position: absolute;
+      right: -180px;
+      top: -120px;
+      border: 1px solid rgba(213, 225, 180, .25);
+      border-radius: 50%;
+      box-shadow: 0 0 0 28px rgba(213, 225, 180, .03), 0 0 0 58px rgba(213, 225, 180, .025);
+    }
+    .story-panel::after {
+      content: "✳";
+      position: absolute;
+      right: 39px;
+      bottom: 48px;
+      color: rgba(207, 222, 170, .22);
+      font-size: 100px;
+      line-height: 1;
+    }
+    .brand { display: inline-flex; align-items: center; gap: 11px; position: relative; z-index: 1; }
+    .brand-mark {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      color: var(--espresso);
+      background: var(--olive);
+      border-radius: 12px;
+      font-size: 20px;
+    }
+    .brand-name { font-family: "Plus Jakarta Sans", sans-serif; font-size: 19px; font-weight: 800; letter-spacing: -.07em; }
+    .story-copy { position: relative; z-index: 1; max-width: 330px; margin: auto 0; }
+    .story-kicker { margin: 0 0 18px; color: #c7d49f; font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+    .story-copy h1 { margin: 0 0 17px; color: #fffaf2; font-family: "Plus Jakarta Sans", sans-serif; font-size: clamp(30px, 4vw, 44px); letter-spacing: -.06em; line-height: 1.08; }
+    .story-copy p { margin: 0; color: #c7bcb1; font-size: 14px; line-height: 1.75; }
+    .story-footer { position: relative; z-index: 1; color: #9e8e80; font-size: 11px; }
+    .form-panel { display: flex; flex-direction: column; justify-content: center; padding: 54px clamp(32px, 6vw, 76px); }
+    .form-wrap { width: min(100%, 380px); margin: 0 auto; }
+    .form-kicker { margin: 0 0 10px; color: var(--olive-dark); font-size: 11px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; }
+    .form-header h2 { margin: 0 0 10px; font-family: "Plus Jakarta Sans", sans-serif; font-size: clamp(25px, 3vw, 31px); letter-spacing: -.055em; line-height: 1.14; }
+    .form-header p { margin: 0 0 30px; color: var(--muted); font-size: 13px; line-height: 1.65; }
+    .notice { display: none; align-items: flex-start; gap: 9px; margin: 0 0 20px; padding: 12px 13px; border-radius: 11px; font-size: 12px; line-height: 1.5; }
+    .notice.show { display: flex; }
+    .notice.error { color: var(--danger); background: var(--danger-soft); }
+    .notice.info { color: var(--olive-dark); background: var(--olive-soft); }
+    .notice i { flex: 0 0 auto; margin-top: 1px; font-size: 16px; }
+    .field { margin-bottom: 18px; }
+    .field label { display: block; margin-bottom: 8px; color: var(--espresso-soft); font-size: 12px; font-weight: 700; }
+    .input-wrap { position: relative; }
+    .input-wrap > i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #a9998d; font-size: 18px; pointer-events: none; }
+    .input-wrap input { width: 100%; height: 48px; padding: 0 44px; color: var(--espresso); background: #fffdf9; border: 1px solid var(--line); border-radius: 11px; outline: 0; font-size: 13px; transition: border-color .18s ease, box-shadow .18s ease; }
+    .input-wrap input::placeholder { color: #b6a99f; }
+    .input-wrap input:focus { border-color: var(--olive); box-shadow: 0 0 0 4px rgba(132, 148, 95, .13); }
+    .toggle-password { position: absolute; right: 5px; top: 5px; width: 38px; height: 38px; display: grid; place-items: center; color: var(--muted); background: transparent; border: 0; border-radius: 8px; }
+    .toggle-password:hover, .toggle-password:focus-visible { color: var(--olive-dark); background: var(--olive-soft); outline: 0; }
+    .field-error { display: block; min-height: 15px; padding: 5px 2px 0; color: var(--danger); font-size: 11px; }
+    .submit-button { width: 100%; height: 49px; display: inline-flex; align-items: center; justify-content: center; gap: 9px; margin-top: 3px; color: #fffdf9; background: var(--olive-dark); border: 0; border-radius: 11px; box-shadow: 0 8px 16px rgba(91, 107, 61, .2); font-size: 13px; font-weight: 700; transition: background .18s ease, transform .18s ease, box-shadow .18s ease; }
+    .submit-button:hover:not(:disabled) { background: #4c5c32; transform: translateY(-1px); box-shadow: 0 11px 20px rgba(91, 107, 61, .24); }
+    .submit-button:focus-visible { outline: 3px solid rgba(132, 148, 95, .35); outline-offset: 3px; }
+    .submit-button:disabled { cursor: wait; opacity: .78; }
+    .security-note { display: flex; align-items: center; justify-content: center; gap: 7px; margin: 21px 0 0; color: #a09389; font-size: 11px; }
+    .security-note i { color: var(--olive-dark); font-size: 15px; }
+    .mobile-footer { display: none; }
+    @media (max-width: 760px) {
+      .page-shell { padding: 15px; place-items: start center; }
+      .login-layout { display: block; min-height: 0; margin: auto 0; border-radius: 22px; }
+      .story-panel { min-height: 220px; padding: 25px 24px; }
+      .story-copy { margin: 34px 0 0; max-width: 440px; }
+      .story-copy h1 { margin-bottom: 10px; font-size: 30px; }
+      .story-copy p { max-width: 400px; font-size: 13px; }
+      .story-footer { display: none; }
+      .story-panel::after { right: 12px; bottom: -8px; font-size: 75px; }
+      .form-panel { padding: 33px 24px 28px; }
+      .form-header p { margin-bottom: 25px; }
+      .mobile-footer { display: block; margin-top: 24px; color: #aa9a8f; text-align: center; font-size: 10px; }
+    }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; } }
+  </style>
+</head>
+<body>
+  <main class="page-shell">
+    <section class="login-layout" aria-label="Login admin Warkopony">
+      <div class="story-panel">
+        <div class="brand" aria-label="Warkopony">
+          <span class="brand-mark"><i class="ph ph-coffee" aria-hidden="true"></i></span>
+          <span class="brand-name">warkopony</span>
+        </div>
+        <div class="story-copy">
+          <p class="story-kicker">Ruang kerja admin</p>
+          <h1>Meracik pengalaman, setiap hari.</h1>
+          <p>Kelola cerita, menu, dan ruang hangat Warkopony dari satu tempat.</p>
+        </div>
+        <p class="story-footer">Hangat di cangkir. Dekat di hati.</p>
+      </div>
+
+      <div class="form-panel">
+        <div class="form-wrap">
+          <header class="form-header">
+            <p class="form-kicker">Portal admin</p>
+            <h2>Selamat Datang Kembali</h2>
+            <p>Masuk untuk melanjutkan pengelolaan Warkopony.</p>
+          </header>
+
+          <div id="notice" class="notice" role="alert" aria-live="polite">
+            <i id="notice-icon" class="ph ph-warning-circle" aria-hidden="true"></i>
+            <span id="notice-text"></span>
+          </div>
+
+          <form id="login-form" novalidate>
+            <div class="field">
+              <label for="email">Alamat email</label>
+              <div class="input-wrap">
+                <i class="ph ph-envelope-simple" aria-hidden="true"></i>
+                <input id="email" name="email" type="email" autocomplete="username" placeholder="nama@warkopony.id" required>
+              </div>
+              <span id="email-error" class="field-error" aria-live="polite"></span>
+            </div>
+            <div class="field">
+              <label for="password">Kata sandi</label>
+              <div class="input-wrap">
+                <i class="ph ph-lock-key" aria-hidden="true"></i>
+                <input id="password" name="password" type="password" autocomplete="current-password" placeholder="Masukkan kata sandi" required>
+                <button id="toggle-password" class="toggle-password" type="button" aria-label="Tampilkan kata sandi" aria-pressed="false">
+                  <i class="ph ph-eye" aria-hidden="true"></i>
+                </button>
+              </div>
+              <span id="password-error" class="field-error" aria-live="polite"></span>
+            </div>
+            <button id="submit-button" class="submit-button" type="submit">
+              <span id="submit-label">Masuk ke Dashboard</span>
+              <i id="submit-icon" class="ph ph-arrow-right" aria-hidden="true"></i>
+            </button>
+          </form>
+          <p class="security-note"><i class="ph ph-shield-check" aria-hidden="true"></i> Akses aman untuk tim Warkopony</p>
+          <p class="mobile-footer">© 2024 Warkopony. Dibuat dengan sepenuh hati.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const TOKEN_KEYS = ["access_token", "accessToken", "token"];
+      const form = document.getElementById("login-form");
+      const emailInput = document.getElementById("email");
+      const passwordInput = document.getElementById("password");
+      const submitButton = document.getElementById("submit-button");
+      const submitLabel = document.getElementById("submit-label");
+      const submitIcon = document.getElementById("submit-icon");
+      const notice = document.getElementById("notice");
+      const noticeIcon = document.getElementById("notice-icon");
+      const noticeText = document.getElementById("notice-text");
+
+      function getApiBase() {
+        return String(window.ADMIN_API_BASE_URL || localStorage.getItem("admin_api_base_url") || "").replace(/\/$/, "");
+      }
+
+      function getDashboardPath(role) {
+        if (role === "KASIR" || role === "CASHIER") return window.CASHIER_DASHBOARD_PATH || localStorage.getItem("cashier_dashboard_path") || "dashboard_kasir.html";
+        return window.ADMIN_DASHBOARD_PATH || localStorage.getItem("admin_dashboard_path") || "dashboard_admin.html";
+      }
+
+      function clearStoredTokens() {
+        TOKEN_KEYS.forEach((key) => localStorage.removeItem(key));
+      }
+
+      function decodeJwtPayload(token) {
+        try {
+          const part = String(token).split(".")[1];
+          if (!part) return null;
+          const normalized = part.replace(/-/g, "+").replace(/_/g, "/");
+          const json = decodeURIComponent(atob(normalized.padEnd(Math.ceil(normalized.length / 4) * 4, "="))
+            .split("").map((char) => "%" + ("00" + char.charCodeAt(0).toString(16)).slice(-2)).join(""));
+          return JSON.parse(json);
+        } catch (_error) { return null; }
+      }
+
+      function tokenPayloadIfValid(token) {
+        const payload = decodeJwtPayload(token);
+        if (!payload) return null;
+        if (Object.prototype.hasOwnProperty.call(payload, "exp")) {
+          const expiry = Number(payload.exp);
+          if (!Number.isFinite(expiry) || expiry * 1000 <= Date.now()) return null;
+        }
+        return payload;
+      }
+
+      function rolesFromPayload(payload) {
+        const roles = payload && (payload.role || payload.roles);
+        return Array.isArray(roles) ? roles : [roles];
+      }
+
+      function tokenRole(token) {
+        const payload = tokenPayloadIfValid(token);
+        return rolesFromPayload(payload).find((role) => role === "ADMIN" || role === "KASIR" || role === "CASHIER") || "";
+      }
+
+      function roleIsAllowed(role, token) {
+        const payload = tokenPayloadIfValid(token);
+        if (!payload) return "";
+        const tokenRoles = rolesFromPayload(payload);
+        const responseRoles = Array.isArray(role) ? role : typeof role === "string" ? [role] : [];
+        const allowed = ["ADMIN", "KASIR", "CASHIER"];
+        if (responseRoles.length) return responseRoles.find((value) => allowed.includes(value) && tokenRoles.includes(value)) || "";
+        return tokenRoles.find((value) => allowed.includes(value)) || "";
+      }
+
+      function findStoredValidRole() {
+        return TOKEN_KEYS.map((key) => localStorage.getItem(key)).map((token) => ({ token, role: token && tokenRole(token) })).find((session) => session.token && session.role) || null;
+      }
+
+      function showNotice(message, type = "error") {
+        notice.className = `notice show ${type}`;
+        noticeIcon.className = type === "info" ? "ph ph-spinner-gap" : "ph ph-warning-circle";
+        noticeText.textContent = message;
+      }
+
+      function clearNotice() { notice.className = "notice"; noticeText.textContent = ""; }
+
+      function setFieldError(id, message) { document.getElementById(`${id}-error`).textContent = message; }
+
+      function setLoading(isLoading) {
+        submitButton.disabled = isLoading;
+        submitLabel.textContent = isLoading ? "Memeriksa akses…" : "Masuk ke Dashboard";
+        submitIcon.className = isLoading ? "ph ph-spinner-gap" : "ph ph-arrow-right";
+      }
+
+      // The backend response shape is unavailable in this workspace. These narrow fallbacks
+      // support common token fields and optional user/role fields without assuming a DTO.
+      function extractLoginData(data) {
+        const source = data && typeof data === "object" ? data : {};
+        const nested = source.data && typeof source.data === "object" ? source.data : {};
+        const token = source.access_token || source.accessToken || source.token || nested.access_token || nested.accessToken || nested.token;
+        const user = source.user || nested.user || source.profile || nested.profile || {};
+        const role = user.role || user.roles || source.role || source.roles || nested.role || nested.roles;
+        return { token: typeof token === "string" ? token : "", role };
+      }
+
+      function roleIsAdmin(role, token) {
+        const tokenIsAdmin = tokenIsValidAdmin(token);
+        if (!tokenIsAdmin) return false;
+        if (Array.isArray(role)) return role.includes("ADMIN");
+        if (typeof role === "string") return role === "ADMIN";
+        return tokenIsAdmin;
+      }
+
+      document.getElementById("toggle-password").addEventListener("click", (event) => {
+        const button = event.currentTarget;
+        const showing = passwordInput.type === "text";
+        passwordInput.type = showing ? "password" : "text";
+        button.setAttribute("aria-label", showing ? "Tampilkan kata sandi" : "Sembunyikan kata sandi");
+        button.setAttribute("aria-pressed", String(!showing));
+        button.querySelector("i").className = showing ? "ph ph-eye" : "ph ph-eye-slash";
+      });
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        clearNotice();
+        setFieldError("email", "");
+        setFieldError("password", "");
+        const email = emailInput.value.trim();
+        const password = passwordInput.value;
+        let valid = true;
+        if (!email) { setFieldError("email", "Email wajib diisi."); valid = false; }
+        else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { setFieldError("email", "Masukkan alamat email yang valid."); valid = false; }
+        if (!password) { setFieldError("password", "Kata sandi wajib diisi."); valid = false; }
+        if (!valid) return;
+
+        clearStoredTokens();
+        setLoading(true);
+        try {
+          const response = await fetch(`${getApiBase()}/auth/login`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json", Accept: "application/json" },
+            body: JSON.stringify({ email, password })
+          });
+          let data = null;
+          try { data = await response.json(); } catch (_error) { data = null; }
+          if (!response.ok) {
+            if (response.status === 429) showNotice("Terlalu banyak percobaan. Silakan tunggu beberapa saat lalu coba lagi.");
+            else if (response.status === 400 || response.status === 401) showNotice("Email atau kata sandi tidak sesuai.");
+            else showNotice("Layanan sedang bermasalah. Coba lagi nanti.");
+            return;
+          }
+          const loginData = extractLoginData(data);
+          const role = roleIsAllowed(loginData.role, loginData.token);
+          if (!loginData.token || !role) {
+            clearStoredTokens();
+            showNotice("Akun ini tidak memiliki akses admin atau kasir.");
+            return;
+          }
+          TOKEN_KEYS.forEach((key) => localStorage.setItem(key, loginData.token));
+          window.location.replace(getDashboardPath(role));
+        } catch (_error) {
+          showNotice("Tidak dapat terhubung ke layanan. Periksa koneksi Anda lalu coba lagi.");
+        } finally { setLoading(false); }
+      });
+
+      // A valid ADMIN/KASIR session is checked locally; no API request is made here.
+      const storedSession = findStoredValidRole();
+      if (storedSession) window.location.replace(getDashboardPath(storedSession.role));
+    })();
+  </script>
+</body>
+</html>
